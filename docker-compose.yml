@@ -1,0 +1,34 @@
+version: '3.9'
+services:
+  web_get_comics_user:
+    env_file:
+      - .env
+    container_name: ${WEB_HOST}
+    hostname: ${WEB_HOST}
+    build: ./app
+    entrypoint:
+      - flask
+      - run
+      - --host=0.0.0.0
+      - --port=5004
+    environment:
+      FLASK_DEBUG: 1
+      FLASK_APP: ./app.py
+      FLASK_RUN_HOST: 0.0.0.0
+      TEMPLATES_AUTO_RELOAD: 'True'
+      FLASK_ENV: development
+    ports: 
+      - '8004:5004'
+    extra_hosts:
+      - "api_comic:192.168.1.213"
+      - "api_user:192.168.1.213"
+      - "user_mongodb:192.168.1.213"
+    volumes:
+      - ./app:/app
+    networks:
+      - coppel
+volumes:
+  persistent:
+networks:
+  coppel:
+    driver: bridge
